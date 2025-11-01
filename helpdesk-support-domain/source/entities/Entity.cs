@@ -1,15 +1,10 @@
 ﻿namespace MdkLegal.HelpDesk.Support.Domain;
 
-public abstract class Entity
+public abstract class Entity(Guid id)
 {
-    protected Entity(Guid id)
-    {
-        Id = id;
-    }
-
     protected Entity() : this(Guid.NewGuid())
     {
     }
 
-    public Guid Id { get; }
+    public Guid Id { get; } = id;
 }

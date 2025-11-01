@@ -16,7 +16,7 @@ public class Ticket : Entity
     public Result<Ticket> From(string title) => new Ticket(title);
 
     public static Error TitleRequired() =>
-        new Error(
+        new(
             "ticket-title-required",
             $"A {nameof(Ticket)} must have a {nameof(Title)}."
         );

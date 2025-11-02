@@ -1,4 +1,4 @@
-﻿namespace MdkLegal.HelpDesk.Support.Domain;
+﻿namespace MdkLegal.Kernel;
 
 /// <summary>
 ///     A class of objects that have both referential and structural equality.

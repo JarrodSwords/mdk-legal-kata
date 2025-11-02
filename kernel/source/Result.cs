@@ -1,4 +1,4 @@
-﻿namespace MdkLegal.HelpDesk.Support.Domain;
+﻿namespace MdkLegal.Kernel;
 
 /// <summary>
 ///     Encapsulates a success or failure.

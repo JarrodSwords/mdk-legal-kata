@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MdkLegal.HelpDesk.Support.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MdkLegal.HelpDesk.Support.Services.Spec", "helpdesk-support-services-spec\MdkLegal.HelpDesk.Support.Services.Spec.csproj", "{40FB9DE6-95E8-45B5-B775-49D9AFC49D0B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MdkLegal.Kernel", "kernel\MdkLegal.Kernel.csproj", "{FF952A44-DBBB-4ACF-A210-E55E4235B562}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,18 @@ Global
 		{40FB9DE6-95E8-45B5-B775-49D9AFC49D0B}.Release|x64.Build.0 = Release|Any CPU
 		{40FB9DE6-95E8-45B5-B775-49D9AFC49D0B}.Release|x86.ActiveCfg = Release|Any CPU
 		{40FB9DE6-95E8-45B5-B775-49D9AFC49D0B}.Release|x86.Build.0 = Release|Any CPU
+		{FF952A44-DBBB-4ACF-A210-E55E4235B562}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF952A44-DBBB-4ACF-A210-E55E4235B562}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF952A44-DBBB-4ACF-A210-E55E4235B562}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FF952A44-DBBB-4ACF-A210-E55E4235B562}.Debug|x64.Build.0 = Debug|Any CPU
+		{FF952A44-DBBB-4ACF-A210-E55E4235B562}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FF952A44-DBBB-4ACF-A210-E55E4235B562}.Debug|x86.Build.0 = Debug|Any CPU
+		{FF952A44-DBBB-4ACF-A210-E55E4235B562}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF952A44-DBBB-4ACF-A210-E55E4235B562}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF952A44-DBBB-4ACF-A210-E55E4235B562}.Release|x64.ActiveCfg = Release|Any CPU
+		{FF952A44-DBBB-4ACF-A210-E55E4235B562}.Release|x64.Build.0 = Release|Any CPU
+		{FF952A44-DBBB-4ACF-A210-E55E4235B562}.Release|x86.ActiveCfg = Release|Any CPU
+		{FF952A44-DBBB-4ACF-A210-E55E4235B562}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

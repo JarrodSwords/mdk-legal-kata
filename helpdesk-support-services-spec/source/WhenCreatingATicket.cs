@@ -2,6 +2,7 @@
 using FluentAssertions.Execution;
 using MdkLegal.HelpDesk.Support.Domain;
 using MdkLegal.HelpDesk.Support.Infrastructure.Ef;
+using MdkLegal.HelpDesk.Support.Read;
 using Ticket = MdkLegal.HelpDesk.Support.Domain.Ticket;
 
 namespace MdkLegal.HelpDesk.Support.Services.Spec;

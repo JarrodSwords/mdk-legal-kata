@@ -1,4 +1,4 @@
-﻿namespace MdkLegal.HelpDesk.Support.Domain;
+﻿namespace MdkLegal.Kernel;
 
 public class Result<T> : Result
 {

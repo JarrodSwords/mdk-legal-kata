@@ -1,4 +1,5 @@
 ﻿using MdkLegal.HelpDesk.Support.Domain;
+using MdkLegal.Kernel;
 
 namespace MdkLegal.HelpDesk.Support.Infrastructure.Ef;
 

@@ -1,4 +1,6 @@
-﻿namespace MdkLegal.HelpDesk.Support.Domain;
+﻿using MdkLegal.Kernel;
+
+namespace MdkLegal.HelpDesk.Support.Domain;
 
 public interface ITicketRepository
 {

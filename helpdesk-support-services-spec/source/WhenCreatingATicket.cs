@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Execution;
-using MdkLegal.HelpDesk.Support.Domain;
 using MdkLegal.HelpDesk.Support.Infrastructure.Ef;
 using MdkLegal.HelpDesk.Support.Read;
 using MdkLegal.HelpDesk.Support.WebApi;
@@ -8,19 +7,21 @@ using Ticket = MdkLegal.HelpDesk.Support.Domain.Ticket;
 
 namespace MdkLegal.HelpDesk.Support.Services.Spec;
 
-public class WhenCreatingATicket
+public class WhenCreatingATicket : IAsyncLifetime
 {
     #region Setup
 
     private readonly CreateTicketHandler _createTicketHandler;
+    private readonly DeleteTicketHandler _deleteTicketHandler;
     private readonly FindTicketHandler _findTicketHandler;
-    private readonly ITicketRepository _repository;
+    private Read.Ticket? _ticket;
 
     public WhenCreatingATicket()
     {
         var context = new Context(DbOptionsFactory.DbContextOptions);
-        _repository = new TicketRepository(context);
-        _createTicketHandler = new(_repository);
+        var repository = new TicketRepository(context);
+        _createTicketHandler = new(repository);
+        _deleteTicketHandler = new(repository);
         var provider = new ConnectionStringProvider(DbOptionsFactory.Configuration);
         _findTicketHandler = new(provider);
     }
@@ -35,6 +36,18 @@ public class WhenCreatingATicket
         yield return [new CreateTicket("Need new security token")];
     }
 
+    public Task DisposeAsync()
+    {
+        if (_ticket is null)
+            return Task.CompletedTask;
+
+        _deleteTicketHandler.Handle(new(_ticket.Id));
+
+        return Task.CompletedTask;
+    }
+
+    public Task InitializeAsync() => Task.CompletedTask;
+
     #endregion
 
     #region Requirements
@@ -43,12 +56,12 @@ public class WhenCreatingATicket
     [MemberData(nameof(CreateTicketCommands))]
     public void ThenTicketIsExpected(CreateTicket command)
     {
-        var ticket = _createTicketHandler.Handle(command)
-            .Then(ticketId => _findTicketHandler.Handle(new(ticketId))).Value;
+        _ticket = _createTicketHandler.Handle(command)
+            .Then(ticketId => _findTicketHandler.Handle(new(ticketId))).Value!;
 
         using var scope = new AssertionScope();
 
-        ticket.Title.Should().Be(command.Title);
+        _ticket.Title.Should().Be(command.Title);
     }
 
     [Theory]

@@ -24,6 +24,19 @@ public class TicketRepository(Context context) : ITicketRepository
         }
     }
 
+    public Result Delete(Guid id)
+    {
+        var ticket = context.Ticket.Find(id);
+
+        if (ticket is null)
+            return NotFound();
+
+        context.Ticket.Remove(ticket);
+        context.SaveChanges();
+
+        return Success();
+    }
+
     public static Error AlreadyExists() =>
         new(
             "ticket-already-exists",
@@ -34,5 +47,11 @@ public class TicketRepository(Context context) : ITicketRepository
         new(
             "create-ticket-failed",
             $"Could not commit {nameof(Ticket)} to storage."
+        );
+
+    public static Error NotFound() =>
+        new(
+            "ticket-not-found",
+            $"Could not find {nameof(Ticket)}."
         );
 }

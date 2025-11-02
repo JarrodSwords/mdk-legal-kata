@@ -9,4 +9,6 @@ public interface ITicketRepository
     /// </summary>
     /// <param name="ticket">The <see cref="Ticket" /> domain object.</param>
     Result Create(Ticket ticket);
+
+    Result Delete(Guid id);
 }

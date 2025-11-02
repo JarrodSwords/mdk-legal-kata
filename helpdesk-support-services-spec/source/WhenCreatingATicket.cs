@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Execution;
+using MdkLegal.HelpDesk.Support.Domain;
 using MdkLegal.HelpDesk.Support.Infrastructure.Ef;
 using MdkLegal.HelpDesk.Support.Read;
 using MdkLegal.HelpDesk.Support.WebApi;

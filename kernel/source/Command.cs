@@ -1,4 +1,4 @@
-﻿namespace MdkLegal.HelpDesk.Support.Services;
+﻿namespace MdkLegal.Kernel;
 
 /// <summary>
 ///     Represents a client's request to do work.

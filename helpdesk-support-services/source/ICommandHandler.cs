@@ -1,4 +1,6 @@
-﻿namespace MdkLegal.HelpDesk.Support.Services;
+﻿using MdkLegal.Kernel;
+
+namespace MdkLegal.HelpDesk.Support.Services;
 
 public interface ICommandHandler<in T, out TResult> where T : Command
 {

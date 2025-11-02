@@ -15,7 +15,7 @@ public class AutofacModule : Module
     [
         typeof(Entity).Assembly, // kernel
         typeof(Program).Assembly, // api
-        typeof(CreateTicket).Assembly, // services
+        typeof(CreateTicketHandler).Assembly, // services
         typeof(Context).Assembly, // infrastructure
         typeof(FindTicket).Assembly, // read
         typeof(Ticket).Assembly // domain

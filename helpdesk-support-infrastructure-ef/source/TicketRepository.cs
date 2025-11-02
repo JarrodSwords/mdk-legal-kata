@@ -3,17 +3,17 @@ using MdkLegal.Kernel;
 
 namespace MdkLegal.HelpDesk.Support.Infrastructure.Ef;
 
-public class TicketRepository(Context Context) : ITicketRepository
+public class TicketRepository(Context context) : ITicketRepository
 {
     public Result Create(Domain.Ticket ticket)
     {
         try
         {
-            if (Context.Ticket.Any(x => x.Id == ticket.Id))
+            if (context.Ticket.Any(x => x.Id == ticket.Id))
                 return AlreadyExists();
 
-            Context.Ticket.Add(ticket);
-            Context.SaveChanges();
+            context.Ticket.Add(ticket);
+            context.SaveChanges();
 
             return Success();
         }

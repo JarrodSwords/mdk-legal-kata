@@ -3,6 +3,7 @@ using FluentAssertions.Execution;
 using MdkLegal.HelpDesk.Support.Domain;
 using MdkLegal.HelpDesk.Support.Infrastructure.Ef;
 using MdkLegal.HelpDesk.Support.Read;
+using MdkLegal.HelpDesk.Support.WebApi;
 using Ticket = MdkLegal.HelpDesk.Support.Domain.Ticket;
 
 namespace MdkLegal.HelpDesk.Support.Services.Spec;
@@ -17,8 +18,11 @@ public class WhenCreatingATicket
 
     public WhenCreatingATicket()
     {
-        _repository = new TicketRepository(new Context());
+        var context = new Context(DbOptionsFactory.DbContextOptions);
+        _repository = new TicketRepository(context);
         _createTicketHandler = new(_repository);
+        var provider = new ConnectionStringProvider(DbOptionsFactory.Configuration);
+        _findTicketHandler = new(provider);
     }
 
     #endregion

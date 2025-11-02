@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using MdkLegal.HelpDesk.Support.Services;
+using Microsoft.Data.SqlClient;
 
 namespace MdkLegal.HelpDesk.Support.Read;
 
@@ -15,9 +16,16 @@ public class FindTicketHandler : IQueryHandler<FindTicket, Result<Ticket>>
          WHERE Id = @Id                    
         """;
 
+    private readonly IConnectionStringProvider _provider;
+
+    public FindTicketHandler(IConnectionStringProvider provider)
+    {
+        _provider = provider;
+    }
+
     public Result<Ticket> Handle(FindTicket query)
     {
-        using var connection = new SqlConnection();
+        using var connection = new SqlConnection(_provider.GetConnectionString());
 
         try
         {
@@ -50,5 +58,6 @@ public class FindTicketHandler : IQueryHandler<FindTicket, Result<Ticket>>
 
 public class Ticket
 {
+    public Guid Id { get; init; }
     public string Title { get; init; }
 }

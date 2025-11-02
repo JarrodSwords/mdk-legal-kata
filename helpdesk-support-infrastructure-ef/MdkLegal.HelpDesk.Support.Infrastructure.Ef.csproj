@@ -8,10 +8,17 @@
 
   <ItemGroup>
     <ProjectReference Include="..\helpdesk-support-domain\MdkLegal.HelpDesk.Support.Domain.csproj" />
+    <ProjectReference Include="..\helpdesk-support-services\MdkLegal.HelpDesk.Support.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="8.4.0" />
+    <PackageReference Include="microsoft.entityframeworkcore.design" Version="9.0.10">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.10" />
+    <PackageReference Include="microsoft.extensions.configuration.binder" Version="9.0.10" />
   </ItemGroup>
 
 </Project>

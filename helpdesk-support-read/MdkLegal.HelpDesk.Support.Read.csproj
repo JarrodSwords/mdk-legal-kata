@@ -7,11 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="8.4.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
     <PackageReference Include="dapper" Version="2.1.66" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.6" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\helpdesk-support-services\MdkLegal.HelpDesk.Support.Services.csproj" />
     <ProjectReference Include="..\kernel\MdkLegal.Kernel.csproj" />
   </ItemGroup>
 

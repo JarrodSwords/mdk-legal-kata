@@ -11,6 +11,7 @@ public class Ticket : Entity
 
     private Ticket(string title)
     {
+        Title = title;
     }
 
     public static Result<Ticket> From(string title)

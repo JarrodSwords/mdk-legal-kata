@@ -2,12 +2,19 @@
 
 public class Ticket : Entity
 {
-    public Ticket(string title)
+    public Ticket()
+    {
+    }
+
+    public Ticket(Guid id, string title) : base(id)
     {
         Title = title;
     }
 
-    public Ticket(Domain.Ticket source) : this(source.Title)
+    public Ticket(Domain.Ticket source) : this(
+        source.Id,
+        source.Title
+    )
     {
     }
 

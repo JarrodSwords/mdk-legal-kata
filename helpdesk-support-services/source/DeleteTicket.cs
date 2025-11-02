@@ -3,15 +3,10 @@ using MdkLegal.Kernel;
 
 namespace MdkLegal.HelpDesk.Support.Services;
 
-public record CreateTicket : Command
-{
-    public CreateTicket(string title, Guid? id = null) : base(id)
-    {
-        Title = title;
-    }
-
-    public string Title { get; }
-}
+public record CreateTicket(
+    string Description,
+    string Title
+) : Command;
 
 /// <summary>
 ///     Creates a <see cref="Ticket" />.
@@ -26,7 +21,9 @@ public class CreateTicketHandler(ITicketRepository repository)
 {
     public Result<Guid> Handle(CreateTicket command)
     {
-        var initializeTicketResult = Ticket.From(command.Title);
+        var (description, title) = command;
+
+        var initializeTicketResult = Ticket.From(description, title);
 
         if (initializeTicketResult.IsFailure)
             return initializeTicketResult.Error!;

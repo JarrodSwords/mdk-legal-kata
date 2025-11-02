@@ -32,8 +32,21 @@ public class WhenCreatingATicket : IAsyncLifetime
 
     public static IEnumerable<object[]> CreateTicketCommands()
     {
-        yield return [new CreateTicket("Laptop battery request")];
-        yield return [new CreateTicket("Need new security token")];
+        yield return
+        [
+            new CreateTicket(
+                "Current battery life is too short.",
+                "Laptop battery request"
+            )
+        ];
+
+        yield return
+        [
+            new CreateTicket(
+                "John lost his security token in St. Louis last week.",
+                "Need new security token"
+            )
+        ];
     }
 
     public Task DisposeAsync()
@@ -53,6 +66,17 @@ public class WhenCreatingATicket : IAsyncLifetime
     #region Requirements
 
     [Theory]
+    [ClassData(typeof(NullOrWhitespace))]
+    public void ThenDescriptionIsRequired(string invalidDescription)
+    {
+        var createTicket = new CreateTicket(invalidDescription, "Title");
+
+        var error = _createTicketHandler.Handle(createTicket).Error;
+
+        error.Should().Be(Ticket.DescriptionRequired());
+    }
+
+    [Theory]
     [MemberData(nameof(CreateTicketCommands))]
     public void ThenTicketIsExpected(CreateTicket command)
     {
@@ -62,13 +86,20 @@ public class WhenCreatingATicket : IAsyncLifetime
         using var scope = new AssertionScope();
 
         _ticket.Title.Should().Be(command.Title);
+        _ticket.Description.Should().Be(command.Description);
+        _ticket.IsClosed.Should().BeFalse();
+        _ticket.IsInProgress.Should().BeFalse();
+        _ticket.IsOpen.Should().BeTrue();
+        _ticket.CreatedAt.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(5));
+        _ticket.UpdatedAt.Should().BeNull();
+        _ticket.AssignedUserId.Should().BeNull();
     }
 
     [Theory]
     [ClassData(typeof(NullOrWhitespace))]
     public void ThenTitleIsRequired(string invalidTitle)
     {
-        var createTicket = new CreateTicket(invalidTitle);
+        var createTicket = new CreateTicket("Description", invalidTitle);
 
         var error = _createTicketHandler.Handle(createTicket).Error;
 

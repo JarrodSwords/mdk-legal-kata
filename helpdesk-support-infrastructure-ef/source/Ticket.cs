@@ -1,4 +1,6 @@
-﻿namespace MdkLegal.HelpDesk.Support.Infrastructure.Ef;
+﻿using static MdkLegal.HelpDesk.Support.Domain.TicketStatus;
+
+namespace MdkLegal.HelpDesk.Support.Infrastructure.Ef;
 
 public class Ticket : Entity
 {
@@ -6,19 +8,29 @@ public class Ticket : Entity
     {
     }
 
-    public Ticket(Guid id, string title) : base(id)
+    public Ticket(Domain.Ticket source)
     {
+        var (id, assignedUserId, createdAt, description, status, title, updatedAt) = source;
+
+        Id = id;
+        AssignedUserId = assignedUserId;
+        CreatedAt = createdAt;
+        Description = description;
+        IsClosed = status == Closed;
+        IsInProgress = status == InProgress;
+        IsOpen = status == Open;
         Title = title;
+        UpdatedAt = updatedAt;
     }
 
-    public Ticket(Domain.Ticket source) : this(
-        source.Id,
-        source.Title
-    )
-    {
-    }
-
+    public Guid? AssignedUserId { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public string Description { get; set; }
+    public bool IsClosed { get; set; }
+    public bool IsInProgress { get; set; }
+    public bool IsOpen { get; set; }
     public string Title { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     public static implicit operator Ticket(Domain.Ticket source) => new(source);
 }

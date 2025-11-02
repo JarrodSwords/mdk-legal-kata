@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\helpdesk-support-domain\MdkLegal.HelpDesk.Support.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

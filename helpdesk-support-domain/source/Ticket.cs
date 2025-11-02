@@ -11,9 +11,15 @@ public class Ticket : Entity
     {
     }
 
-    public string Title { get; }
+    public static Result<Ticket> From(string title)
+    {
+        if (string.IsNullOrEmpty(title))
+            return TitleRequired();
 
-    public Result<Ticket> From(string title) => new Ticket(title);
+        return new Ticket(title);
+    }
+
+    public string Title { get; }
 
     public static Error TitleRequired() =>
         new(

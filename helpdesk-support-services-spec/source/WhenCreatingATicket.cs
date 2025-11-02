@@ -1,4 +1,5 @@
-﻿using MdkLegal.HelpDesk.Support.Domain;
+﻿using FluentAssertions;
+using MdkLegal.HelpDesk.Support.Domain;
 
 namespace MdkLegal.HelpDesk.Support.Services.Spec;
 
@@ -16,7 +17,7 @@ public class WhenCreatingATicket
 
         var error = handler.Handle(createTicket).Error;
 
-        error.Should().Be(Ticket.TitleRequired);
+        error.Should().Be(Ticket.TitleRequired());
     }
 
     #endregion

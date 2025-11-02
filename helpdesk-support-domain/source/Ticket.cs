@@ -13,7 +13,7 @@ public class Ticket : Entity
 
     public static Result<Ticket> From(string title)
     {
-        if (string.IsNullOrEmpty(title))
+        if (string.IsNullOrWhiteSpace(title))
             return TitleRequired();
 
         return new Ticket(title);

@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\helpdesk-support-infrastructure-ef\MdkLegal.HelpDesk.Support.Infrastructure.Ef.csproj" />
     <ProjectReference Include="..\helpdesk-support-services\MdkLegal.HelpDesk.Support.Services.csproj" />
   </ItemGroup>
 

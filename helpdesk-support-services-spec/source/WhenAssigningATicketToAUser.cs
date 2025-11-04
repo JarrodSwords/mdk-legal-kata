@@ -11,7 +11,7 @@ public class WhenAssigningATicketToAUser : IAsyncLifetime
 {
     #region Setup
 
-    private readonly AssignTicketHandler _assignTicketHandler;
+    private readonly AssignUserHandler _assignUserHandler;
     private readonly CreateTicketHandler _createTicketHandler;
     private readonly DeleteTicketHandler _deleteTicketHandler;
     private readonly DeleteUserHandler _deleteUserHandler;
@@ -32,7 +32,7 @@ public class WhenAssigningATicketToAUser : IAsyncLifetime
         _registerUserHandler = new(userRepository);
         var provider = new ConnectionStringProvider(DbOptionsFactory.Configuration);
         _findTicketHandler = new(provider);
-        _assignTicketHandler = new AssignTicketHandler(ticketRepository);
+        _assignUserHandler = new AssignUserHandler(ticketRepository);
     }
 
     #endregion
@@ -64,9 +64,9 @@ public class WhenAssigningATicketToAUser : IAsyncLifetime
     [Fact]
     public void ThenAssignedUserIdIsSet()
     {
-        var command = new AssignTicket(_ticketId, _userId);
+        var command = new AssignUser(_ticketId, _userId);
 
-        _ticket = _assignTicketHandler.Handle(command)
+        _ticket = _assignUserHandler.Handle(command)
             .Then(() => _findTicketHandler.Handle(new(_ticketId))).Value!;
 
         _ticket.UserId.Should().Be(command.UserId);

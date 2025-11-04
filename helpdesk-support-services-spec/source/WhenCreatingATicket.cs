@@ -31,25 +31,6 @@ public class WhenCreatingATicket : IAsyncLifetime
 
     #region Implementation
 
-    public static IEnumerable<object[]> CreateTicketCommands()
-    {
-        yield return
-        [
-            new CreateTicket(
-                "Current battery life is too short.",
-                "Laptop battery request"
-            )
-        ];
-
-        yield return
-        [
-            new CreateTicket(
-                "John lost his security token in St. Louis last week.",
-                "Need new security token"
-            )
-        ];
-    }
-
     public Task DisposeAsync()
     {
         if (_ticket is null)
@@ -78,7 +59,7 @@ public class WhenCreatingATicket : IAsyncLifetime
     }
 
     [Theory]
-    [MemberData(nameof(CreateTicketCommands))]
+    [ClassData(typeof(ValidCreateTicketCommands))]
     public void ThenTicketIsExpected(CreateTicket command)
     {
         _ticket = _createTicketHandler.Handle(command)

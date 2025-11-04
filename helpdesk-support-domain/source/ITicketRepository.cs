@@ -11,4 +11,6 @@ public interface ITicketRepository
     Result Create(Ticket ticket);
 
     Result Delete(Guid id);
+    Result<Ticket> Find(Guid id);
+    Result Update(Ticket ticket);
 }

@@ -1,13 +1,9 @@
-﻿namespace MdkLegal.HelpDesk.Support.Domain;
+﻿using MdkLegal.Kernel;
+
+namespace MdkLegal.HelpDesk.Support.Domain;
 
 public partial class Ticket : Entity
 {
-    private Ticket(Guid id, string description, string title) : base(id)
-    {
-        Description = description;
-        Title = title;
-    }
-
     public void Deconstruct(
         out Guid id,
         out Guid? assignedUserId,
@@ -28,9 +24,51 @@ public partial class Ticket : Entity
     }
 
     public Guid? AssignedUserId { get; }
-    public DateTime CreatedAt { get; }
-    public string Description { get; }
-    public TicketStatus Status { get; }
-    public string Title { get; }
-    public DateTime? UpdatedAt { get; }
+    public DateTime CreatedAt { get; set; }
+    public Description Description { get; set; }
+    public TicketStatus Status { get; set; }
+    public Title Title { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+}
+
+public class Description(string value) : TinyType<string>(value)
+{
+    public static Result<Description> From(string title) =>
+        string.IsNullOrWhiteSpace(title)
+            ? Ticket.DescriptionRequired()
+            : new Description(title);
+
+    public static bool From(string candidateDescription, out Description description)
+    {
+        description = null;
+        var result = From(candidateDescription);
+
+        if (result.IsFailure)
+            return false;
+
+        description = result.Value!;
+
+        return true;
+    }
+}
+
+public class Title(string value) : TinyType<string>(value)
+{
+    public static Result<Title> From(string title) =>
+        string.IsNullOrWhiteSpace(title)
+            ? Ticket.TitleRequired()
+            : new Title(title);
+
+    public static bool From(string candidateTitle, out Title title)
+    {
+        title = null;
+        var result = From(candidateTitle);
+
+        if (result.IsFailure)
+            return false;
+
+        title = result.Value!;
+
+        return true;
+    }
 }

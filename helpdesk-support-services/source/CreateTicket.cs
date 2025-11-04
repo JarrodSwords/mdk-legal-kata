@@ -9,7 +9,8 @@ namespace MdkLegal.HelpDesk.Support.Services;
 /// <param name="repository"></param>
 /// <remarks>
 ///     I won't chain methods in this handler to show the longer, less-functional approach.
-///     While I prefer chaining, some teams don't. I'm demonstrating that this is an option.
+///     While I prefer railway programming, some teams don't.
+///     I'm demonstrating that this is an option.
 /// </remarks>
 public class CreateTicketHandler(ITicketRepository repository)
     : ICommandHandler<CreateTicket, Result<Guid>>

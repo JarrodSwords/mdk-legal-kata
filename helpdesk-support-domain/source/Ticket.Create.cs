@@ -9,7 +9,7 @@ public record CreateTicket(
 
 public partial class Ticket
 {
-    private Ticket(string description, string title)
+    private Ticket(Description description, Title title)
     {
         Description = description;
         Title = title;
@@ -19,12 +19,10 @@ public partial class Ticket
 
     public static Result<Ticket> From(CreateTicket command)
     {
-        var (description, title) = command;
-
-        if (string.IsNullOrWhiteSpace(description))
+        if (!Description.From(command.Description, out var description))
             return DescriptionRequired();
 
-        if (string.IsNullOrWhiteSpace(title))
+        if (!Title.From(command.Title, out var title))
             return TitleRequired();
 
         return new Ticket(description, title);

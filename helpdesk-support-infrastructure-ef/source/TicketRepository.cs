@@ -5,6 +5,8 @@ namespace MdkLegal.HelpDesk.Support.Infrastructure.Ef;
 
 public class TicketRepository(Context context) : ITicketRepository
 {
+    private Ticket? FindDbTicket(Guid id) => context.Ticket.SingleOrDefault(x => x.Id == id);
+
     public Result Create(Domain.Ticket ticket)
     {
         try
@@ -37,6 +39,40 @@ public class TicketRepository(Context context) : ITicketRepository
         return Success();
     }
 
+    public Result<Domain.Ticket> Find(Guid id)
+    {
+        var ticket = FindDbTicket(id);
+
+        if (ticket is null)
+            return NotFound();
+
+        return (Domain.Ticket) ticket;
+    }
+
+    public Result Update(Domain.Ticket ticket)
+    {
+        try
+        {
+            var dbTicket = FindDbTicket(ticket.Id);
+
+            dbTicket.Description = ticket.Description;
+            dbTicket.IsClosed = ticket.Status == TicketStatus.Closed;
+            dbTicket.IsInProgress = ticket.Status == TicketStatus.InProgress;
+            dbTicket.IsOpen = ticket.Status == TicketStatus.Open;
+            dbTicket.Title = ticket.Title;
+            dbTicket.UpdatedAt = ticket.UpdatedAt;
+
+            context.Update(dbTicket);
+            context.SaveChanges();
+
+            return Success();
+        }
+        catch (Exception e)
+        {
+            return UpdateFailed();
+        }
+    }
+
     public static Error AlreadyExists() =>
         new(
             "ticket-already-exists",
@@ -53,5 +89,11 @@ public class TicketRepository(Context context) : ITicketRepository
         new(
             "ticket-not-found",
             $"Could not find {nameof(Ticket)}."
+        );
+
+    public static Error UpdateFailed() =>
+        new(
+            "update-ticket-failed",
+            $"Could not commit {nameof(Ticket)} to storage."
         );
 }

@@ -74,7 +74,7 @@ public class WhenCreatingATicket : IAsyncLifetime
         _ticket.IsOpen.Should().BeTrue();
         _ticket.CreatedAt.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(5));
         _ticket.UpdatedAt.Should().BeNull();
-        _ticket.AssignedUserId.Should().BeNull();
+        _ticket.UserId.Should().BeNull();
     }
 
     [Theory]

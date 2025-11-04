@@ -3,10 +3,10 @@ using MdkLegal.Kernel;
 
 namespace MdkLegal.HelpDesk.Support.Services;
 
-public record DeleteTicket(Guid TicketId) : Command;
+public record DeleteUser(Guid UserId) : Command;
 
-public class DeleteTicketHandler(ITicketRepository repository)
-    : ICommandHandler<DeleteTicket, Result>
+public class DeleteUserHandler(IUserRepository repository)
+    : ICommandHandler<DeleteUser, Result>
 {
-    public Result Handle(DeleteTicket command) => repository.Delete(command.TicketId);
+    public Result Handle(DeleteUser command) => repository.Delete(command.UserId);
 }

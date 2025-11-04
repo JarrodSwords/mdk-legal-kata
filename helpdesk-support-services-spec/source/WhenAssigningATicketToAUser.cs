@@ -14,19 +14,25 @@ public class WhenAssigningATicketToAUser : IAsyncLifetime
     private readonly AssignTicketHandler _assignTicketHandler;
     private readonly CreateTicketHandler _createTicketHandler;
     private readonly DeleteTicketHandler _deleteTicketHandler;
+    private readonly DeleteUserHandler _deleteUserHandler;
     private readonly FindTicketHandler _findTicketHandler;
+    private readonly RegisterUserHandler _registerUserHandler;
     private Ticket? _ticket;
     private Guid _ticketId;
+    private Guid _userId;
 
     public WhenAssigningATicketToAUser()
     {
         var context = new Context(DbOptionsFactory.DbContextOptions);
-        var repository = new TicketRepository(context);
-        _createTicketHandler = new(repository);
-        _deleteTicketHandler = new(repository);
+        var ticketRepository = new TicketRepository(context);
+        var userRepository = new UserRepository(context);
+        _createTicketHandler = new(ticketRepository);
+        _deleteTicketHandler = new(ticketRepository);
+        _deleteUserHandler = new(userRepository);
+        _registerUserHandler = new(userRepository);
         var provider = new ConnectionStringProvider(DbOptionsFactory.Configuration);
         _findTicketHandler = new(provider);
-        _assignTicketHandler = new AssignTicketHandler(repository);
+        _assignTicketHandler = new AssignTicketHandler(ticketRepository);
     }
 
     #endregion
@@ -36,6 +42,7 @@ public class WhenAssigningATicketToAUser : IAsyncLifetime
     public Task DisposeAsync()
     {
         _deleteTicketHandler.Handle(new(_ticketId));
+        _deleteUserHandler.Handle(new(_userId));
 
         return Task.CompletedTask;
     }
@@ -44,6 +51,8 @@ public class WhenAssigningATicketToAUser : IAsyncLifetime
     {
         var command = new ValidCreateTicketCommands().First()[0] as CreateTicket;
         _ticketId = _createTicketHandler.Handle(command!).Value;
+
+        _userId = _registerUserHandler.Handle(new("JohnDoe", "john.doe@gmail.com"));
 
         return Task.CompletedTask;
     }
@@ -55,12 +64,12 @@ public class WhenAssigningATicketToAUser : IAsyncLifetime
     [Fact]
     public void ThenAssignedUserIdIsSet()
     {
-        var command = new AssignTicket(_ticketId, Guid.NewGuid());
+        var command = new AssignTicket(_ticketId, _userId);
 
         _ticket = _assignTicketHandler.Handle(command)
             .Then(() => _findTicketHandler.Handle(new(_ticketId))).Value!;
 
-        _ticket.AssignedUserId.Should().Be(command.UserId);
+        _ticket.UserId.Should().Be(command.UserId);
     }
 
     #endregion

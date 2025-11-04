@@ -82,7 +82,7 @@ public class WhenUpdatingATicket : IAsyncLifetime
         _ticket.CreatedAt.Should().Be(_originalTicket.CreatedAt);
         _ticket.UpdatedAt.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(5));
         _ticket.UpdatedAt.Should().BeAfter(_ticket.CreatedAt);
-        _ticket.AssignedUserId.Should().BeNull();
+        _ticket.UserId.Should().BeNull();
     }
 
     #endregion

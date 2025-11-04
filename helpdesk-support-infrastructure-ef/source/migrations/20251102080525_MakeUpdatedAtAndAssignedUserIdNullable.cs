@@ -20,7 +20,7 @@ namespace MdkLegal.HelpDesk.Support.Infrastructure.Ef.source.migrations
                 oldType: "datetime2");
 
             migrationBuilder.AlterColumn<Guid>(
-                name: "AssignedUserId",
+                name: "UserId",
                 table: "Ticket",
                 type: "uniqueidentifier",
                 nullable: true,
@@ -42,7 +42,7 @@ namespace MdkLegal.HelpDesk.Support.Infrastructure.Ef.source.migrations
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<Guid>(
-                name: "AssignedUserId",
+                name: "UserId",
                 table: "Ticket",
                 type: "uniqueidentifier",
                 nullable: false,

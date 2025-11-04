@@ -12,7 +12,7 @@ public class FindTicketHandler(IConnectionStringProvider provider)
     private const string Query =
         """
         SELECT Id
-             , AssignedUserId
+             , UserId
              , CreatedAt
              , Description
              , IsClosed
@@ -60,7 +60,7 @@ public class FindTicketHandler(IConnectionStringProvider provider)
 public class Ticket
 {
     public Guid Id { get; init; }
-    public Guid? AssignedUserId { get; init; }
+    public Guid? UserId { get; init; }
     public DateTime CreatedAt { get; init; }
     public string Description { get; init; }
     public bool IsClosed { get; init; }

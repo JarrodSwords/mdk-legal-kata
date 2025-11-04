@@ -12,7 +12,7 @@ namespace MdkLegal.HelpDesk.Support.Infrastructure.Ef.source.migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<Guid>(
-                name: "AssignedUserId",
+                name: "UserId",
                 table: "Ticket",
                 type: "uniqueidentifier",
                 nullable: false,
@@ -65,7 +65,7 @@ namespace MdkLegal.HelpDesk.Support.Infrastructure.Ef.source.migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "AssignedUserId",
+                name: "UserId",
                 table: "Ticket");
 
             migrationBuilder.DropColumn(

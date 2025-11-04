@@ -13,7 +13,7 @@ public class Ticket : Entity
         var (id, assignedUserId, createdAt, description, status, title, updatedAt) = source;
 
         Id = id;
-        AssignedUserId = assignedUserId;
+        UserId = assignedUserId;
         CreatedAt = createdAt;
         Description = description;
         IsClosed = status == Closed;
@@ -25,7 +25,7 @@ public class Ticket : Entity
 
     public void Deconstruct(
         out Guid id,
-        out Guid? assignedUserId,
+        out Guid? userId,
         out DateTime createdAt,
         out string description,
         out bool isClosed,
@@ -36,7 +36,7 @@ public class Ticket : Entity
     )
     {
         id = Id;
-        assignedUserId = AssignedUserId;
+        userId = UserId;
         createdAt = CreatedAt;
         description = Description;
         isClosed = IsClosed;
@@ -46,7 +46,7 @@ public class Ticket : Entity
         updatedAt = UpdatedAt;
     }
 
-    public Guid? AssignedUserId { get; set; }
+    public Guid? UserId { get; set; }
     public DateTime CreatedAt { get; set; }
     public string Description { get; set; }
     public bool IsClosed { get; set; }
@@ -54,12 +54,13 @@ public class Ticket : Entity
     public bool IsOpen { get; set; }
     public string Title { get; set; }
     public DateTime? UpdatedAt { get; set; }
+    public User? User { get; set; }
 
     public static implicit operator Ticket(Domain.Ticket source) => new(source);
 
     public static implicit operator Domain.Ticket(Ticket source)
     {
-        var (id, assignedUserId, createdAt, description, isClosed, isInProgress, isOpen, title, updatedAt) = source;
+        var (id, userId, createdAt, description, isClosed, isInProgress, isOpen, title, updatedAt) = source;
 
         var status = Open;
 
@@ -68,6 +69,6 @@ public class Ticket : Entity
         else if (isInProgress)
             status = InProgress;
 
-        return new(id, assignedUserId, createdAt, description, status, title, updatedAt);
+        return new(id, userId, createdAt, description, status, title, updatedAt);
     }
 }

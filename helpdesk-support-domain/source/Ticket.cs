@@ -21,10 +21,10 @@ public partial class Ticket : Entity
         updatedAt = UpdatedAt;
     }
 
-    public Guid? AssignedUserId { get; }
-    public DateTime CreatedAt { get; set; }
-    public Description Description { get; set; }
-    public TicketStatus Status { get; set; }
-    public Title Title { get; set; }
+    public Guid? AssignedUserId { get; private set; }
+    public DateTime CreatedAt { get; }
+    public Description Description { get; private set; }
+    public TicketStatus Status { get; private set; }
+    public Title Title { get; private set; }
     public DateTime? UpdatedAt { get; set; }
 }

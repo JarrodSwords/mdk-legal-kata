@@ -55,6 +55,7 @@ public class TicketRepository(Context context) : ITicketRepository
         {
             var dbTicket = FindDbTicket(ticket.Id);
 
+            dbTicket.AssignedUserId = ticket.AssignedUserId;
             dbTicket.Description = ticket.Description;
             dbTicket.IsClosed = ticket.Status == TicketStatus.Closed;
             dbTicket.IsInProgress = ticket.Status == TicketStatus.InProgress;

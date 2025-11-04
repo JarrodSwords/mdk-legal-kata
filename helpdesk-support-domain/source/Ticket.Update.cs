@@ -19,7 +19,7 @@ public partial class Ticket
         CreatedAt = createdAt;
         Description = Description.From(description).Value!;
         Status = status;
-        Title = Title.From(description).Value!;
+        Title = Title.From(title).Value!;
         UpdatedAt = updatedAt;
     }
 

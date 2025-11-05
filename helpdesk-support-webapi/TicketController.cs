@@ -7,13 +7,13 @@ using Ticket = MdkLegal.HelpDesk.Support.Read.Ticket;
 
 namespace MdkLegal.HelpDesk.Support.WebApi;
 
-[Route("api/[controller]")]
+[Route("api/tickets")]
 [ApiController]
 public class TicketController(
-    CreateTicketHandler createTicketHandler,
-    FetchTicketsHandler fetchTicketsHandler,
-    AssignUserHandler assignUserHandler,
-    FindTicketHandler findTicketHandler
+    ICommandHandler<AssignUser, Result> assignUserHandler,
+    ICommandHandler<CreateTicket, Result<Guid>> createTicketHandler,
+    IQueryHandler<FetchTickets, Result<IEnumerable<FetchTicketsHandler.Ticket>>> fetchTicketsHandler,
+    IQueryHandler<FindTicket, Result<Ticket>> findTicketHandler
 ) : ControllerBase
 {
     [HttpPut("{id:guid}/assign-user")]

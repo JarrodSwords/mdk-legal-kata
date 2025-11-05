@@ -3,7 +3,6 @@ using Autofac;
 using MdkLegal.HelpDesk.Support.Infrastructure.Ef;
 using MdkLegal.HelpDesk.Support.Read;
 using MdkLegal.HelpDesk.Support.Services;
-using Entity = MdkLegal.HelpDesk.Support.Infrastructure.Ef.Entity;
 using Module = Autofac.Module;
 using Ticket = MdkLegal.HelpDesk.Support.Domain.Ticket;
 
@@ -13,7 +12,6 @@ public class AutofacModule : Module
 {
     public static readonly Assembly[] Assemblies =
     [
-        typeof(Entity).Assembly, // kernel
         typeof(Program).Assembly, // api
         typeof(CreateTicketHandler).Assembly, // services
         typeof(Context).Assembly, // infrastructure
@@ -23,7 +21,7 @@ public class AutofacModule : Module
 
     protected override void Load(ContainerBuilder builder)
     {
-        builder.RegisterAssemblyTypes().AsImplementedInterfaces();
+        builder.RegisterAssemblyTypes(typeof(AutofacModule).Assembly).AsImplementedInterfaces();
         builder.RegisterType<Program>().AsSelf();
     }
 }

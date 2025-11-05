@@ -1,31 +1,15 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Execution;
 using MdkLegal.HelpDesk.Support.Domain;
-using MdkLegal.HelpDesk.Support.Infrastructure.Ef;
-using MdkLegal.HelpDesk.Support.Read;
-using MdkLegal.HelpDesk.Support.WebApi;
 using Ticket = MdkLegal.HelpDesk.Support.Domain.Ticket;
 
 namespace MdkLegal.HelpDesk.Support.Services.Spec;
 
-public class WhenCreatingATicket : IAsyncLifetime
+public class WhenCreatingATicket : TicketSpec, IAsyncLifetime
 {
     #region Setup
 
-    private readonly CreateTicketHandler _createTicketHandler;
-    private readonly DeleteTicketHandler _deleteTicketHandler;
-    private readonly FindTicketHandler _findTicketHandler;
     private Read.Ticket? _ticket;
-
-    public WhenCreatingATicket()
-    {
-        var context = new Context(DbOptionsFactory.DbContextOptions);
-        var repository = new TicketRepository(context);
-        _createTicketHandler = new(repository);
-        _deleteTicketHandler = new(repository);
-        var provider = new ConnectionStringProvider(DbOptionsFactory.Configuration);
-        _findTicketHandler = new(provider);
-    }
 
     #endregion
 
@@ -36,7 +20,7 @@ public class WhenCreatingATicket : IAsyncLifetime
         if (_ticket is null)
             return Task.CompletedTask;
 
-        _deleteTicketHandler.Handle(new(_ticket.Id));
+        DeleteTicket(_ticket.Id);
 
         return Task.CompletedTask;
     }
@@ -53,7 +37,7 @@ public class WhenCreatingATicket : IAsyncLifetime
     {
         var createTicket = new CreateTicket(invalidDescription, "Title");
 
-        var error = _createTicketHandler.Handle(createTicket).Error;
+        var error = CreateTicketHandler.Handle(createTicket).Error;
 
         error.Should().Be(Ticket.DescriptionRequired());
     }
@@ -62,8 +46,8 @@ public class WhenCreatingATicket : IAsyncLifetime
     [ClassData(typeof(ValidCreateTicketCommands))]
     public void ThenTicketIsExpected(CreateTicket command)
     {
-        _ticket = _createTicketHandler.Handle(command)
-            .Then(ticketId => _findTicketHandler.Handle(new(ticketId))).Value!;
+        _ticket = CreateTicketHandler.Handle(command)
+            .Then(FindTicket).Value!;
 
         using var scope = new AssertionScope();
 
@@ -83,7 +67,7 @@ public class WhenCreatingATicket : IAsyncLifetime
     {
         var createTicket = new CreateTicket("Description", invalidTitle);
 
-        var error = _createTicketHandler.Handle(createTicket).Error;
+        var error = CreateTicketHandler.Handle(createTicket).Error;
 
         error.Should().Be(Ticket.TitleRequired());
     }

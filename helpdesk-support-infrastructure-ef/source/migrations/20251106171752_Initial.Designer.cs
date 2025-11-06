@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MdkLegal.HelpDesk.Support.Infrastructure.Ef.source.migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20251102080525_MakeUpdatedAtAndAssignedUserIdNullable")]
-    partial class MakeUpdatedAtAndAssignedUserIdNullable
+    [Migration("20251106171752_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,9 +29,6 @@ namespace MdkLegal.HelpDesk.Support.Infrastructure.Ef.source.migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("AssignedUserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
@@ -57,9 +54,42 @@ namespace MdkLegal.HelpDesk.Support.Infrastructure.Ef.source.migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Ticket");
+                });
+
+            modelBuilder.Entity("MdkLegal.HelpDesk.Support.Infrastructure.Ef.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("User");
+                });
+
+            modelBuilder.Entity("MdkLegal.HelpDesk.Support.Infrastructure.Ef.Ticket", b =>
+                {
+                    b.HasOne("MdkLegal.HelpDesk.Support.Infrastructure.Ef.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

@@ -50,9 +50,7 @@ public class WhenUpdatingATicket : TicketSpec, IAsyncLifetime
         var command = new UpdateTicket(
             _ticketId,
             "New Description",
-            true,
-            false,
-            false,
+            TicketStatus.Closed,
             "New Title"
         );
 

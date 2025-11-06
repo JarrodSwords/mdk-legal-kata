@@ -12,6 +12,7 @@ namespace MdkLegal.HelpDesk.Support.WebApi;
 public class TicketController(
     ICommandHandler<AssignUser, Result> assignUserHandler,
     ICommandHandler<CreateTicket, Result<Guid>> createTicketHandler,
+    ICommandHandler<Services.UpdateTicket, Result> updateTicketHandler,
     IQueryHandler<FetchTickets, Result<IEnumerable<FetchTicketsHandler.Ticket>>> fetchTicketsHandler,
     IQueryHandler<FindTicket, Result<Ticket>> findTicketHandler
 ) : ControllerBase
@@ -21,8 +22,8 @@ public class TicketController(
     [ProducesResponseType(typeof(Error), Status404NotFound)]
     [ProducesResponseType(typeof(Error), Status422UnprocessableEntity)]
     [ProducesResponseType(typeof(Error), Status500InternalServerError)]
-    public IActionResult AssignUser(Guid id, Guid userId) =>
-        assignUserHandler.Handle(new(id, userId))
+    public IActionResult AssignUser(Guid id, AssignUser command) =>
+        assignUserHandler.Handle(command)
             .Then<IActionResult>(() => Ok()).Value!;
 
     [HttpPost]
@@ -56,4 +57,29 @@ public class TicketController(
     public IActionResult Find(Guid id) =>
         findTicketHandler.Handle(new(id))
             .Then<IActionResult>(ticket => Ok(ticket)).Value!;
+
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(typeof(Ticket), Status200OK)]
+    [ProducesResponseType(typeof(Error), Status404NotFound)]
+    [ProducesResponseType(typeof(Error), Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(Error), Status500InternalServerError)]
+    public IActionResult Update(Guid id, UpdateTicket command) =>
+        updateTicketHandler.Handle(command)
+            .Then<IActionResult>(() => Ok()).Value!;
+}
+
+public record UpdateTicket(
+    Guid TicketId,
+    string Description,
+    string Status,
+    string Title
+)
+{
+    public static implicit operator Services.UpdateTicket(UpdateTicket source) =>
+        new(
+            source.TicketId,
+            source.Description,
+            TicketStatusFactory.From(source.Status),
+            source.Title
+        );
 }

@@ -35,7 +35,7 @@ public class FetchTicketsHandler(IConnectionStringProvider provider)
         {
             connection.Open();
 
-            var tickets = connection.Query<Ticket, User, Ticket>(
+            var tickets = connection.Query<DbTicket, User, Ticket>(
                 Query,
                 (t, u) =>
                 {
@@ -59,7 +59,7 @@ public class FetchTicketsHandler(IConnectionStringProvider provider)
         }
     }
 
-    public class Ticket
+    public class DbTicket
     {
         public Guid Id { get; init; }
         public DateTime CreatedAt { get; init; }
@@ -72,10 +72,27 @@ public class FetchTicketsHandler(IConnectionStringProvider provider)
         public User User { get; set; }
     }
 
-    public class User
+    public class Ticket(DbTicket source)
     {
-        public Guid Id { get; set; }
-        public string Email { get; set; }
-        public string Name { get; set; }
+        public Guid Id { get; } = source.Id;
+        public DateTime CreatedAt { get; } = source.CreatedAt;
+        public string Description { get; } = source.Description;
+        public string Status { get; } = GetStatus(source);
+        public string Title { get; } = source.Title;
+        public DateTime? UpdatedAt { get; } = source.UpdatedAt;
+        public User User { get; } = source.User;
+
+        public static string GetStatus(DbTicket source)
+        {
+            if (source.IsOpen)
+                return "Open";
+
+            if (source.IsInProgress)
+                return "In Progress";
+
+            return "Closed";
+        }
+
+        public static implicit operator Ticket(DbTicket source) => new(source);
     }
 }

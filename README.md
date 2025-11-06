@@ -2,7 +2,7 @@
 
 To deploy the database, first alter the `MdkLegal` server property in the WebApi project's `appsettings.json` file. Then, navigate to the solution folder in the developer powershell and run:
 
-```dotnet ef database update -p .\helpdesk-support-infrastructure-ef\ -s .\helpdesk-support-webapi\ -c Context -- --environment development```
+```dotnet ef database update -p .\helpdesk-support-infrastructure-ef\ -s .\helpdesk-support-webapi\ -c Context --environment development```
 
 ## Testing
 

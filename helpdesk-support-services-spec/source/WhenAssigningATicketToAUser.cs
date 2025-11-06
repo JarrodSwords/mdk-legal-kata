@@ -1,21 +1,16 @@
 ﻿using FluentAssertions;
 using MdkLegal.HelpDesk.Support.Domain;
 using MdkLegal.HelpDesk.Support.Infrastructure.Ef;
-using MdkLegal.HelpDesk.Support.Read;
-using MdkLegal.HelpDesk.Support.WebApi;
 using Ticket = MdkLegal.HelpDesk.Support.Read.Ticket;
 
 namespace MdkLegal.HelpDesk.Support.Services.Spec;
 
-public class WhenAssigningATicketToAUser : IAsyncLifetime
+public class WhenAssigningATicketToAUser : TicketSpec, IAsyncLifetime
 {
     #region Setup
 
-    private readonly AssignTicketHandler _assignTicketHandler;
-    private readonly CreateTicketHandler _createTicketHandler;
-    private readonly DeleteTicketHandler _deleteTicketHandler;
+    private readonly AssignUserHandler _assignUserHandler;
     private readonly DeleteUserHandler _deleteUserHandler;
-    private readonly FindTicketHandler _findTicketHandler;
     private readonly RegisterUserHandler _registerUserHandler;
     private Ticket? _ticket;
     private Guid _ticketId;
@@ -23,16 +18,10 @@ public class WhenAssigningATicketToAUser : IAsyncLifetime
 
     public WhenAssigningATicketToAUser()
     {
-        var context = new Context(DbOptionsFactory.DbContextOptions);
-        var ticketRepository = new TicketRepository(context);
-        var userRepository = new UserRepository(context);
-        _createTicketHandler = new(ticketRepository);
-        _deleteTicketHandler = new(ticketRepository);
+        var userRepository = new UserRepository(Context);
         _deleteUserHandler = new(userRepository);
         _registerUserHandler = new(userRepository);
-        var provider = new ConnectionStringProvider(DbOptionsFactory.Configuration);
-        _findTicketHandler = new(provider);
-        _assignTicketHandler = new AssignTicketHandler(ticketRepository);
+        _assignUserHandler = new AssignUserHandler(TicketRepository);
     }
 
     #endregion
@@ -41,7 +30,8 @@ public class WhenAssigningATicketToAUser : IAsyncLifetime
 
     public Task DisposeAsync()
     {
-        _deleteTicketHandler.Handle(new(_ticketId));
+        DeleteTicket(_ticketId);
+
         _deleteUserHandler.Handle(new(_userId));
 
         return Task.CompletedTask;
@@ -50,7 +40,7 @@ public class WhenAssigningATicketToAUser : IAsyncLifetime
     public Task InitializeAsync()
     {
         var command = new ValidCreateTicketCommands().First()[0] as CreateTicket;
-        _ticketId = _createTicketHandler.Handle(command!).Value;
+        _ticketId = CreateTicket(command!);
 
         _userId = _registerUserHandler.Handle(new("JohnDoe", "john.doe@gmail.com"));
 
@@ -64,10 +54,10 @@ public class WhenAssigningATicketToAUser : IAsyncLifetime
     [Fact]
     public void ThenAssignedUserIdIsSet()
     {
-        var command = new AssignTicket(_ticketId, _userId);
+        var command = new AssignUser(_ticketId, _userId);
 
-        _ticket = _assignTicketHandler.Handle(command)
-            .Then(() => _findTicketHandler.Handle(new(_ticketId))).Value!;
+        _ticket = _assignUserHandler.Handle(command)
+            .Then(() => FindTicket(_ticketId));
 
         _ticket.UserId.Should().Be(command.UserId);
     }

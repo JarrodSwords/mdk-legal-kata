@@ -1,20 +1,14 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Execution;
 using MdkLegal.HelpDesk.Support.Domain;
-using MdkLegal.HelpDesk.Support.Infrastructure.Ef;
-using MdkLegal.HelpDesk.Support.Read;
-using MdkLegal.HelpDesk.Support.WebApi;
 using Ticket = MdkLegal.HelpDesk.Support.Read.Ticket;
 
 namespace MdkLegal.HelpDesk.Support.Services.Spec;
 
-public class WhenUpdatingATicket : IAsyncLifetime
+public class WhenUpdatingATicket : TicketSpec, IAsyncLifetime
 {
     #region Setup
 
-    private readonly CreateTicketHandler _createTicketHandler;
-    private readonly DeleteTicketHandler _deleteTicketHandler;
-    private readonly FindTicketHandler _findTicketHandler;
     private readonly UpdateTicketHandler _updateTicketHandler;
     private Ticket _originalTicket;
     private Ticket? _ticket;
@@ -22,13 +16,7 @@ public class WhenUpdatingATicket : IAsyncLifetime
 
     public WhenUpdatingATicket()
     {
-        var context = new Context(DbOptionsFactory.DbContextOptions);
-        var repository = new TicketRepository(context);
-        _createTicketHandler = new(repository);
-        _deleteTicketHandler = new(repository);
-        var provider = new ConnectionStringProvider(DbOptionsFactory.Configuration);
-        _findTicketHandler = new(provider);
-        _updateTicketHandler = new UpdateTicketHandler(repository);
+        _updateTicketHandler = new UpdateTicketHandler(TicketRepository);
     }
 
     #endregion
@@ -37,7 +25,7 @@ public class WhenUpdatingATicket : IAsyncLifetime
 
     public Task DisposeAsync()
     {
-        _deleteTicketHandler.Handle(new(_ticketId));
+        DeleteTicket(_ticketId);
 
         return Task.CompletedTask;
     }
@@ -46,9 +34,8 @@ public class WhenUpdatingATicket : IAsyncLifetime
     {
         var command = new ValidCreateTicketCommands().First()[0] as CreateTicket;
 
-        _ticketId = _createTicketHandler.Handle(command!).Value;
-
-        _originalTicket = _findTicketHandler.Handle(new(_ticketId)).Value!;
+        _ticketId = CreateTicket(command!);
+        _originalTicket = FindTicket(_ticketId).Value!;
 
         return Task.CompletedTask;
     }
@@ -63,14 +50,12 @@ public class WhenUpdatingATicket : IAsyncLifetime
         var command = new UpdateTicket(
             _ticketId,
             "New Description",
-            true,
-            false,
-            false,
+            TicketStatus.Closed,
             "New Title"
         );
 
         _ticket = _updateTicketHandler.Handle(command)
-            .Then(() => _findTicketHandler.Handle(new(_ticketId))).Value!;
+            .Then(() => FindTicket(_ticketId)).Value!;
 
         using var scope = new AssertionScope();
 

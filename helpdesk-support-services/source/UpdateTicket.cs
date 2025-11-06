@@ -6,9 +6,7 @@ namespace MdkLegal.HelpDesk.Support.Services;
 public record UpdateTicket(
     Guid TicketId,
     string Description,
-    bool IsClosed,
-    bool IsInProgress,
-    bool IsOpen,
+    TicketStatus Status,
     string Title
 ) : Command;
 
@@ -30,7 +28,7 @@ public class UpdateTicketHandler(ITicketRepository repository)
 
                     ticket.Set(title);
 
-                    if (command.IsClosed)
+                    if (command.Status == TicketStatus.Closed)
                         ticket.Close();
 
                     ticket.UpdatedAt = DateTime.Now;

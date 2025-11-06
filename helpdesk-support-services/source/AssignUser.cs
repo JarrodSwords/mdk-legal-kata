@@ -3,12 +3,12 @@ using MdkLegal.Kernel;
 
 namespace MdkLegal.HelpDesk.Support.Services;
 
-public record AssignTicket(Guid TicketId, Guid UserId) : Command;
+public record AssignUser(Guid TicketId, Guid UserId) : Command;
 
-public class AssignTicketHandler(ITicketRepository repository)
-    : ICommandHandler<AssignTicket, Result>
+public class AssignUserHandler(ITicketRepository repository)
+    : ICommandHandler<AssignUser, Result>
 {
-    public Result Handle(AssignTicket command) =>
+    public Result Handle(AssignUser command) =>
         repository.Find(command.TicketId)
             .Then(
                 ticket =>

@@ -4,6 +4,8 @@ To deploy the database, first alter the `MdkLegal` server property in the WebApi
 
 ```dotnet ef database update -p .\helpdesk-support-infrastructure-ef\ -s .\helpdesk-support-webapi\ -c Context --environment development```
 
+If you don't have EF, use `dotnet tool install --global dotnet-ef`.
+
 ## Testing
 
 There are two XUnit test libraries suffixed with `.Spec`. They can be run simultaneously and self-clean. If you would like to view the tickets/users committed to storage during the tests, you will have to put a break point on/around the assertion(s) of the desired test. You may have to copy the `appsettings.json` file to the appropriate testing directory.
